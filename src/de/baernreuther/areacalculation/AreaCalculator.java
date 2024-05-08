@@ -13,6 +13,6 @@ public interface AreaCalculator {
 	 * @param wall Wall to calculate the Area for
 	 * @return 
 	 */
-	double calculateArea(Wall wall);
+	WallAreaResult calculateArea(Wall wall);
 	
 }

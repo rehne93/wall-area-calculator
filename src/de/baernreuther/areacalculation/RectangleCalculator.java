@@ -11,9 +11,12 @@ import com.eteks.sweethome3d.model.Wall;
 public class RectangleCalculator implements AreaCalculator {
 
 	@Override
-	public double calculateArea(Wall wall) {
-		// TODO Auto-generated method stub
-		return 0;
+	public WallAreaResult calculateArea(Wall wall) {
+		double areaCm2 = wall.getHeight() * wall.getLength();
+
+		WallAreaResult result =  new WallAreaResult(areaCm2, wall.getLeftSideColor(), wall.getRightSideColor());
+		return result;
+
 	}
 
 }

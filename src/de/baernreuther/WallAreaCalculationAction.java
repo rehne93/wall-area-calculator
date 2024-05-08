@@ -9,11 +9,15 @@ import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.Wall;
 import com.eteks.sweethome3d.plugin.PluginAction;
 
+import de.baernreuther.areacalculation.AreaCalculatorFactory;
+import de.baernreuther.areacalculation.WallAreaResult;
 import de.baernreuther.util.HomeFilter;
 
 public class WallAreaCalculationAction extends PluginAction {
 
 	private Home home;
+	private AreaCalculatorFactory areaCalculatorFactory = new AreaCalculatorFactory();
+	
 
 	public WallAreaCalculationAction(Home home) {
 		putPropertyValue(Property.NAME, "Compute volume");
@@ -30,34 +34,26 @@ public class WallAreaCalculationAction extends PluginAction {
 		HomeFilter homeFilter = new HomeFilter(this.home);
 		List<Wall> walls = homeFilter.getWalls();
 		
-		List<String> areaMessages = new ArrayList<String>();
+		List<WallAreaResult> areaMessages = new ArrayList<WallAreaResult>();
 		
 		for(Wall w: walls) {
-			// TODO: Auslagern der Logik
-			// TODO: Farben als Strings?
+			// TODO: Farben als Strings? -> funktioniert über "color" klasse möglicherweise
 			// TODO: Dreieck berechnung wenn Höhe unterschiedlich
 			// TODO: ArcExtend berechnung
-			// TODO: Umrechnen in m2 von cm2
-			if(w.getArcExtent() == null && w.getHeightAtEnd() == null) {
-				double area = w.getHeight() * w.getLength();
-				// Default Rectangle
-				areaMessages.add("Color " + w.getRightSideColor() + " (right) needs " + area);
-				areaMessages.add("Color " + w.getLeftSideColor() + " (left) needs " + area);
+			areaMessages.add(this.areaCalculatorFactory.getCalculator(w).calculateArea(w));
 
-			}
 		}
 
 		if (areaMessages.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "No Walls found");
 		} else {
-			// Display the result in a message box (\u00b3 is for 3 in supercript)
 			JOptionPane.showMessageDialog(null, this.collectMessage(areaMessages));
 		}
 	}
 
-	private String collectMessage(List<String> messages) {
+	private String collectMessage(List<WallAreaResult> results) {
 		StringBuilder sb = new StringBuilder();
-		for (String m : messages) {
+		for (WallAreaResult m : results) {
 			sb.append(m);
 			sb.append("\n");
 		}
